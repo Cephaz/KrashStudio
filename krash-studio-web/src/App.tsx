@@ -3,14 +3,16 @@ import axios from 'axios';
 import SearchBar from './components/SearchBar';
 import ResultsList from './components/ResultsList';
 import DetailCard from './components/DetailCard';
+import './App.css';
 
-interface SearchResult {
-  name: string;
+export interface SearchResult {
+  id: string;
+  name?: string;
   title?: string;
   [key: string]: any;
 }
 
-type Category = 'people' | 'planets' | 'starships' | 'vehicles' | 'films' | 'species';
+export type Category = 'people' | 'planets' | 'starships' | 'vehicles' | 'films' | 'species';
 
 const App: React.FC = () => {
   const [query, setQuery] = useState('');
@@ -21,7 +23,7 @@ const App: React.FC = () => {
   const handleSearch = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/search/${category}?q=${query}`);
-      setResults(response.data);
+      setResults(response.data.map((item: any, index: number) => ({ ...item, id: index })));
       setSelectedItem(null);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -29,25 +31,25 @@ const App: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>SWAPI Search</h1>
-      <SearchBar
-        query={query}
-        category={category}
-        onQueryChange={setQuery}
-        onCategoryChange={setCategory}
-        onSearch={handleSearch}
-      />
-      <div style={{ display: 'flex', marginTop: '20px' }}>
-        <div style={{ flex: 1 }}>
+    <div className="app-container">
+      <header className="app-header">
+        <h1>Star Wars API Search</h1>
+      </header>
+      <main className="app-main">
+        <SearchBar
+          query={query}
+          category={category}
+          onQueryChange={setQuery}
+          onCategoryChange={setCategory}
+          onSearch={handleSearch}
+        />
+        <div className="results-container">
           <ResultsList results={results} onSelectItem={setSelectedItem} />
-        </div>
-        <div style={{ flex: 1 }}>
           <DetailCard item={selectedItem} />
         </div>
-      </div>
+      </main>
     </div>
   );
-}
+};
 
 export default App;
