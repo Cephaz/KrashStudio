@@ -1,30 +1,52 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
+import SearchBar from './components/SearchBar';
+import ResultsList from './components/ResultsList';
+import DetailCard from './components/DetailCard';
 
-function App() {
-  const [count, setCount] = useState(0);
+interface SearchResult {
+  name: string;
+  title?: string;
+  [key: string]: any;
+}
+
+type Category = 'people' | 'planets' | 'starships' | 'vehicles' | 'films' | 'species';
+
+const App: React.FC = () => {
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<Category>('people');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [selectedItem, setSelectedItem] = useState<SearchResult | null>(null);
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/search/${category}?q=${query}`);
+      setResults(response.data);
+      setSelectedItem(null);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div>
+      <h1>SWAPI Search</h1>
+      <SearchBar
+        query={query}
+        category={category}
+        onQueryChange={setQuery}
+        onCategoryChange={setCategory}
+        onSearch={handleSearch}
+      />
+      <div style={{ display: 'flex', marginTop: '20px' }}>
+        <div style={{ flex: 1 }}>
+          <ResultsList results={results} onSelectItem={setSelectedItem} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <DetailCard item={selectedItem} />
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    </div>
   );
 }
 
