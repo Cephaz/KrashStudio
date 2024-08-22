@@ -1,1 +1,1 @@
-curl "http://localhost:3000/search/people?q=Luke"
+curl "http://localhost:4010/search/people?q=Luke"
