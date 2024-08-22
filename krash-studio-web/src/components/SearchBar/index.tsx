@@ -1,65 +1,49 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDebounce } from 'use-debounce';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { setQuery, setCategory } from '../../store/swapiSlice';
+import { searchSwapi } from '../../store/actions';
+import { selectQuery, selectCategory } from '../../store/selectors';
+import { CATEGORIES, Category } from '../../constants/categories';
 import styles from './styles.module.css';
 
-const CATEGORIES = {
-  people: 'People',
-  planets: 'Planets',
-  starships: 'Starships',
-  vehicles: 'Vehicles',
-  films: 'Films',
-  species: 'Species',
-} as const;
+const SearchBar: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const query = useAppSelector(selectQuery);
+  const category = useAppSelector(selectCategory);
+  const [debouncedQuery] = useDebounce(query, 300);
 
-type Category = keyof typeof CATEGORIES;
+  useEffect(() => {
+    if (debouncedQuery) {
+      dispatch(searchSwapi({ query: debouncedQuery, category }));
+    }
+  }, [debouncedQuery, category, dispatch]);
 
-interface SearchBarProps {
-  query: string;
-  category: Category;
-  onQueryChange: (query: string) => void;
-  onCategoryChange: (category: Category) => void;
-  onSearch: () => void;
-}
-
-const SearchBar: React.FC<SearchBarProps> = ({ query, category, onQueryChange, onCategoryChange, onSearch }) => {
   const handleQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onQueryChange(event.target.value);
+    dispatch(setQuery(event.target.value));
   };
 
   const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onCategoryChange(event.target.value as Category);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    onSearch();
+    dispatch(setCategory(event.target.value as Category));
   };
 
   return (
-    <form className={styles.searchBar} onSubmit={handleSubmit}>
+    <div className={styles.searchBar}>
       <input
         type="text"
         value={query}
         onChange={handleQueryChange}
-        placeholder="Luke"
+        placeholder="Enter search term"
         className={styles.searchInput}
-        aria-label="Search term"
       />
-      <select
-        value={category}
-        onChange={handleCategoryChange}
-        className={styles.categorySelect}
-        aria-label="Select category"
-      >
+      <select value={category} onChange={handleCategoryChange} className={styles.categorySelect}>
         {Object.entries(CATEGORIES).map(([value, label]) => (
           <option key={value} value={value}>
             {label}
           </option>
         ))}
       </select>
-      <button type="submit" className={styles.searchButton}>
-        Search
-      </button>
-    </form>
+    </div>
   );
 };
 

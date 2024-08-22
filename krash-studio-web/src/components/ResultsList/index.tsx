@@ -1,40 +1,31 @@
 import React from 'react';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { setSelectedItem } from '../../store/swapiSlice';
+import { selectResults, selectStatus, selectError } from '../../store/selectors';
+import { SearchResult } from '../../types/swapi';
 import styles from './styles.module.css';
 
-interface SearchResult {
-  id: string;
-  name?: string;
-  title?: string;
-  [key: string]: any;
-}
+const ResultsList: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const results = useAppSelector(selectResults);
+  const status = useAppSelector(selectStatus);
+  const error = useAppSelector(selectError);
 
-interface ResultsListProps {
-  results: SearchResult[];
-  onSelectItem: (item: SearchResult) => void;
-}
-
-const ResultsList: React.FC<ResultsListProps> = ({ results, onSelectItem }) => {
-  if (results.length === 0) {
-    return (
-      <div className={styles.container}>
-        <h2 className={styles.heading}>Results</h2>
-        <p className={styles.noResults}>No results found.</p>
-      </div>
-    );
-  }
+  if (status === 'loading') return <div className={styles.loading}>Loading...</div>;
+  if (status === 'failed') return <div className={styles.error}>Error: {error}</div>;
+  if (results.length === 0) return <div className={styles.noResults}>No results found.</div>;
 
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>Results</h2>
       <ul className={styles.list}>
-        {results.map((item) => (
+        {results.map((item: SearchResult) => (
           <li
             key={item.id}
             className={styles.listItem}
-            onClick={() => onSelectItem(item)}
+            onClick={() => dispatch(setSelectedItem(item))}
             tabIndex={0}
             role="button"
-            aria-label={`Select ${item.name || item.title}`}
           >
             {item.name || item.title}
           </li>
