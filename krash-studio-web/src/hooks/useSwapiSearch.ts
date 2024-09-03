@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { useDebounce } from 'use-debounce';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { searchSwapi } from '../store/actions';
-import { selectQuery, selectCategory } from '../store/selectors';
+import {useEffect} from 'react';
+import {useDebounce} from 'use-debounce';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
+import {searchSwapi} from '../store/actions';
+import {selectQuery, selectCategory} from '../store/selectors';
 
 export const useSwapiSearch = () => {
   const dispatch = useAppDispatch();
@@ -12,9 +12,9 @@ export const useSwapiSearch = () => {
 
   useEffect(() => {
     if (debouncedQuery) {
-      dispatch(searchSwapi({ query: debouncedQuery, category }));
+      dispatch(searchSwapi({query: debouncedQuery, category}));
     }
   }, [debouncedQuery, category, dispatch]);
 
-  return { query, category };
+  return {query, category};
 };

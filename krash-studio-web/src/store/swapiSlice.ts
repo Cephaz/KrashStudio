@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Category } from '../constants/categories';
-import { SwapiState, SearchResult } from '../types/swapi';
-import { searchSwapi } from './actions';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {Category} from '../constants/categories';
+import {SwapiState, SearchResult} from '../types/swapi';
+import {searchSwapi} from './actions';
 
 const initialState: SwapiState = {
   query: '',
@@ -42,6 +42,6 @@ const swapiSlice = createSlice({
   },
 });
 
-export const { setQuery, setCategory, setSelectedItem } = swapiSlice.actions;
+export const {setQuery, setCategory, setSelectedItem} = swapiSlice.actions;
 
 export default swapiSlice.reducer;

@@ -1,8 +1,8 @@
 import React from 'react';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { setSelectedItem } from '../../store/swapiSlice';
-import { selectResults, selectStatus, selectError } from '../../store/selectors';
-import { SearchResult } from '../../types/swapi';
+import {useAppSelector, useAppDispatch} from '../../store/hooks';
+import {setSelectedItem} from '../../store/swapiSlice';
+import {selectResults, selectStatus, selectError} from '../../store/selectors';
+import {SearchResult} from '../../types/swapi';
 import styles from './styles.module.css';
 
 const ResultsList: React.FC = () => {

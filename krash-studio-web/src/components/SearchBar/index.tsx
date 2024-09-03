@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { useDebounce } from 'use-debounce';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setQuery, setCategory } from '../../store/swapiSlice';
-import { searchSwapi } from '../../store/actions';
-import { selectQuery, selectCategory } from '../../store/selectors';
-import { CATEGORIES, Category } from '../../constants/categories';
+import React, {useEffect} from 'react';
+import {useDebounce} from 'use-debounce';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {setQuery, setCategory} from '../../store/swapiSlice';
+import {searchSwapi} from '../../store/actions';
+import {selectQuery, selectCategory} from '../../store/selectors';
+import {CATEGORIES, Category} from '../../constants/categories';
 import styles from './styles.module.css';
 
 const SearchBar: React.FC = () => {
@@ -15,7 +15,7 @@ const SearchBar: React.FC = () => {
 
   useEffect(() => {
     if (debouncedQuery) {
-      dispatch(searchSwapi({ query: debouncedQuery, category }));
+      dispatch(searchSwapi({query: debouncedQuery, category}));
     }
   }, [debouncedQuery, category, dispatch]);
 

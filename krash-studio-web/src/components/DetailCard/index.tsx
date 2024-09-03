@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAppSelector } from '../../store/hooks';
-import { selectSelectedItem } from '../../store/selectors';
+import {useAppSelector} from '../../store/hooks';
+import {selectSelectedItem} from '../../store/selectors';
 import styles from './styles.module.css';
 
 const DetailCard: React.FC = () => {

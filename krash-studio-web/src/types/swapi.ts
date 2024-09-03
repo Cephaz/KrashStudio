@@ -1,10 +1,10 @@
-import { Category } from "../constants/categories";
+import {Category} from '../constants/categories';
 
 export interface SearchResult {
   id: string;
   name?: string;
   title?: string;
-  [key: string]: any;
+  [key: string]: string | number | boolean | null | undefined;
 }
 
 export interface SwapiState {

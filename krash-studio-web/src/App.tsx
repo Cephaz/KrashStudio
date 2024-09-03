@@ -1,6 +1,6 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { store } from './store';
+import {Provider} from 'react-redux';
+import {store} from './store';
 import SearchBar from './components/SearchBar';
 import ResultsList from './components/ResultsList';
 import DetailCard from './components/DetailCard';
