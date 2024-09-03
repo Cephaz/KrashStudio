@@ -7,20 +7,34 @@ interface ApiResponse {
   [key: string]: string | number | boolean | null | undefined;
 }
 
-export const searchSwapi = createAsyncThunk<SearchResult[], {query: string; category: Category}, {rejectValue: string}>(
+interface SearchParams {
+  query: string;
+  category: Category;
+}
+
+const API_BASE_URL = 'http://localhost:3000';
+
+const fetchSearchResults = async ({query, category}: SearchParams): Promise<ApiResponse[]> => {
+  const response = await axios.get<ApiResponse[]>(`${API_BASE_URL}/search/${category}`, {
+    params: {q: query},
+  });
+  return response.data;
+};
+
+export const searchSwapi = createAsyncThunk<SearchResult[], SearchParams, {rejectValue: string}>(
   'swapi/search',
-  async ({query, category}, {rejectWithValue}) => {
+  async (searchParams, {rejectWithValue}) => {
     try {
-      const response = await axios.get<ApiResponse[]>(`http://localhost:3000/search/${category}?q=${query}`);
-      return response.data.map((item, index) => ({
+      const data = await fetchSearchResults(searchParams);
+      return data.map((item, index) => ({
         ...item,
         id: `result-${index}`,
       }));
     } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.message || 'An error occurred while fetching data');
       }
-      return rejectWithValue('An error occurred while fetching data');
+      return rejectWithValue('An unexpected error occurred');
     }
   },
 );
